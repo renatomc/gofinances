@@ -59,7 +59,7 @@ const Register: React.FC = () => {
 
   const formControll = control as unknown as Control<FieldValues, any>;
 
-  const handleTransactionsTypeSelect = useCallback((typeSelect: 'up' | 'down') => {
+  const handleTransactionsTypeSelect = useCallback((typeSelect: 'positive' | 'negative') => {
     setTransactionType(typeSelect);
   }, [setTransactionType]);
 
@@ -83,10 +83,12 @@ const Register: React.FC = () => {
       id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
-      type: transactionType === 'up' ? 'positive' : 'negative',
+      type: transactionType,
       category: category.key,
       date: new Date(),
     };
+
+    console.log({newTransaction});
 
     try {
       const data = await AsyncStorage.getItem(dataKey);
@@ -147,14 +149,14 @@ const Register: React.FC = () => {
                 <TransactionTypeButton 
                   title='Entrada' 
                   type='up' 
-                  onPress={() => handleTransactionsTypeSelect('up')}
-                  isActive={transactionType === 'up'}
+                  onPress={() => handleTransactionsTypeSelect('positive')}
+                  isActive={transactionType === 'positive'}
                 />
                 <TransactionTypeButton 
                   title='Saída' 
                   type='down' 
-                  onPress={() => handleTransactionsTypeSelect('down')}
-                  isActive={transactionType === 'down'}
+                  onPress={() => handleTransactionsTypeSelect('negative')}
+                  isActive={transactionType === 'negative'}
                 />
               </TransactionsTypes>
               <CategorySelectButton title={category.name} onPress={handleOpenCategory} />
