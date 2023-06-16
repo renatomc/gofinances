@@ -20,11 +20,21 @@ import { useAuth } from '../../hooks/auth';
 
 const SignIn: React.FC = () => {
 
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signInWithApple } = useAuth();
 
   async function handleSignInWithGoogle () {
     try {
       await signInWithGoogle();
+    } catch (error) {
+      Alert.alert("Ocorreu um erro ao tentar logar, tente novamente!");
+      console.log({error});
+      
+    }
+  }
+
+  async function handleSignInWithApple () {
+    try {
+      await signInWithApple();
     } catch (error) {
       Alert.alert("Ocorreu um erro ao tentar logar, tente novamente!");
       console.log({error});
@@ -51,7 +61,7 @@ const SignIn: React.FC = () => {
       <Footer>
         <FooterWrapper>
           <SignInSocialButton onPress={handleSignInWithGoogle} title='Entrar com Google' svg={GoogleSvg} />
-          <SignInSocialButton title='Entrar com Apple' svg={AppleSvg} />
+          <SignInSocialButton onPress={handleSignInWithApple} title='Entrar com Apple' svg={AppleSvg} />
         </FooterWrapper>
       </Footer>
     </Container>
