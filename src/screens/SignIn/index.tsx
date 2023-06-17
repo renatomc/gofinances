@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import AppleSvg from '../../assets/apple-icon.svg';
 import GoogleSvg from '../../assets/google-icon.svg';
@@ -15,30 +15,35 @@ import {
  } from './styles';
 import { RFValue } from 'react-native-responsive-fontsize';
 import SignInSocialButton from '../../components/SignInSocialButton';
-import { Alert } from 'react-native';
+import { ActivityIndicator, Alert, Platform } from 'react-native';
 import { useAuth } from '../../hooks/auth';
+import { useTheme } from 'styled-components';
 
 const SignIn: React.FC = () => {
+  const [isLoading, setIsloading] = useState<boolean>(false);
 
   const { signInWithGoogle, signInWithApple } = useAuth();
+  const theme = useTheme();
 
   async function handleSignInWithGoogle () {
     try {
-      await signInWithGoogle();
+      setIsloading(true);
+      return await signInWithGoogle();
     } catch (error) {
       Alert.alert("Ocorreu um erro ao tentar logar, tente novamente!");
       console.log({error});
-      
+      setIsloading(false);
     }
   }
 
   async function handleSignInWithApple () {
     try {
-      await signInWithApple();
+      setIsloading(true);
+      return await signInWithApple();
     } catch (error) {
       Alert.alert("Ocorreu um erro ao tentar logar, tente novamente!");
       console.log({error});
-      
+      setIsloading(false);
     }
   }
 
@@ -61,8 +66,19 @@ const SignIn: React.FC = () => {
       <Footer>
         <FooterWrapper>
           <SignInSocialButton onPress={handleSignInWithGoogle} title='Entrar com Google' svg={GoogleSvg} />
-          <SignInSocialButton onPress={handleSignInWithApple} title='Entrar com Apple' svg={AppleSvg} />
+         {Platform.OS === 'ios' && (
+           <SignInSocialButton onPress={handleSignInWithApple} title='Entrar com Apple' svg={AppleSvg} />
+         )}
         </FooterWrapper>
+
+        {isLoading && (
+          <ActivityIndicator 
+            color={theme.colors.shape}  
+            style={{
+              marginTop: 18
+            }}
+          />
+        )}
       </Footer>
     </Container>
   )

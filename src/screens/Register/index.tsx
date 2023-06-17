@@ -20,6 +20,7 @@ import {
   Fields,
   TransactionsTypes,
 } from './styles';
+import { useAuth } from '../../hooks/auth';
 
 interface FormData {
   name: string;
@@ -45,8 +46,9 @@ const Register: React.FC = () => {
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const navigation = useNavigation();
+  const { user } = useAuth();
 
-  const dataKey = '@gofinances:transactions';
+  const dataKey = `@gofinances:transactions_user:${user.id}`;
 
   const {
     control,

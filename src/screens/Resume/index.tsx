@@ -25,6 +25,7 @@ import {
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 
 export interface TransactionData {
@@ -50,6 +51,7 @@ const Resume: React.FC = () => {
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
   const theme = useTheme();
+  const { user } = useAuth();
 
   function handleDateChange(action: 'next' | 'prev') {
     if(action === 'next') {
@@ -62,7 +64,7 @@ const Resume: React.FC = () => {
   }
 
   async function loadData() {
-    const dataKey = '@gofinances:transactions';
+    const dataKey = `@gofinances:transactions_user:${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
 
     const responseFormatted: TransactionData[] = response ? JSON.parse(response) : [];
@@ -75,7 +77,10 @@ const Resume: React.FC = () => {
 
     const expensivesTotal = responseFormatted
     .reduce((acumullator: number, expensive: TransactionData) => {
-      return acumullator + Number(expensive.amount);
+     if(expensive.type === 'negative') {
+       return Number(acumullator) + Number(expensive.amount);
+     } 
+      return 0;
     }, 0);
 
     let totalByCategory: CategoryData[] = [];

@@ -23,6 +23,7 @@ import {
   LogoutButton,
   LoadContainer,
  } from './styles';
+import { useAuth } from '../../hooks/auth';
 
  export interface DataListProps extends TransactionCardProps {
    id: string;
@@ -56,12 +57,13 @@ import {
   });
 
   const theme = useTheme();
+  const { signOut, user } = useAuth();
 
   let entriesSum = 0;
   let expensiveSum = 0;
   let totalSum = 0;
 
-  const dataKey = '@gofinances:transactions';
+  const dataKey = `@gofinances:transactions_user:${user.id}`;
 
   function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
     const dateCompare = collection
@@ -170,13 +172,13 @@ import {
               <Header>
                 <UserWrapper>
                   <UserInfo>
-                    <Photo source={{ uri: 'https://avatars.githubusercontent.com/u/18095062?v=4'}} />
+                    <Photo source={{ uri: user.photo }} />
                     <User>
                       <UserGreeting>Olá, </UserGreeting>
-                      <UserName>Renato</UserName>
+                      <UserName>{user.name}</UserName>
                     </User>
                   </UserInfo>
-                  <LogoutButton onPress={() => {}}>
+                  <LogoutButton onPress={signOut}>
                     <Icon name="power" />
                   </LogoutButton>
                 </UserWrapper>
