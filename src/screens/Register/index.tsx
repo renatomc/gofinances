@@ -161,11 +161,11 @@ const Register: React.FC = () => {
                   isActive={transactionType === 'negative'}
                 />
               </TransactionsTypes>
-              <CategorySelectButton title={category.name} onPress={handleOpenCategory} />
+              <CategorySelectButton testID='button-category' title={category.name} onPress={handleOpenCategory} />
             </Fields>
             <Button title='Enviar' onPress={handleSubmit(handleRegister)} />
         </Form>
-        <Modal visible={categoryModalOpen}>
+        <Modal visible={categoryModalOpen} testID='modal-category'>
           <CategorySelect
             category={category}
             setCategory={setCategory}
